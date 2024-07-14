@@ -138,11 +138,11 @@ void Model::renderFinalFrame() {
 }
 
 void Model::standardCode() {
-    modelShader = ShaderProgram("assets/shaders/vertex/default_models.vert",
-                                "assets/shaders/fragment/default_models.frag");
+    modelShader = ShaderProgram("../assets/shaders/vertex/default_models.vert",
+                                "../assets/shaders/fragment/default_models.frag");
 
-    textureShader = ShaderProgram("assets/shaders/textures/vertex/default_texture.vert",
-                                  "assets/shaders/textures/fragment/default_texture.frag");
+    textureShader = ShaderProgram("../assets/shaders/textures/vertex/default_texture.vert",
+                                  "../assets/shaders/textures/fragment/default_texture.frag");
 
     modelShader.setupShader();
     textureShader.setupShader();
