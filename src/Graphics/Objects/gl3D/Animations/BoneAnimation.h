@@ -10,6 +10,8 @@
 #include <functional>
 #include <utility>
 #include <chrono>
+#include <Utils/SwitcherString.h>
+
 class BoneAnimation {
     std::function<void (std::vector<Bone>& bonesArray,Model &model1,float status,float step)> function = nullptr;
     std::function<void (std::vector<Bone>& bonesArray,Model &model1)> end = nullptr;
@@ -19,6 +21,7 @@ class BoneAnimation {
     std::chrono::high_resolution_clock::time_point startDelay;
     long long delay2tweenAnim = 0;
 public:
+
     BoneAnimation() = default;
     BoneAnimation(std::function<void (std::vector<Bone>& bonesArray,Model &model1,float status,float step)> function,
                   float time_s = 1,bool cycle = false,float delay = 1000);

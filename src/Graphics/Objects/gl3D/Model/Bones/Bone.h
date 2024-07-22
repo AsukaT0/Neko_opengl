@@ -15,6 +15,7 @@
 class Bone {
 private:
     std::vector<BoneData> data0;
+    std::vector<Bone> allBones;
     s2i modelKeys;
     int parent = -1;
     std::vector<int> childs;
@@ -24,12 +25,6 @@ private:
     Color color{};
     Model *p;
 public:
-    class AnimateAdaptObject{
-
-    public:
-        void convert();
-
-    };
     Bone();
     Bone(Model&part,const std::vector<std::string>&modelIDs);
     Bone(Model&part,const std::vector<int>&childs,const std::vector<std::string>& modelIDs);
@@ -79,6 +74,7 @@ public:
 
     void destroy();
     void reset(Model&part, std::vector<Bone>&bone);
+    std::vector<BoneData> getData();
 };
 
 

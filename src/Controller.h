@@ -10,10 +10,11 @@
 
 class Controller {
 private:
-
+    static std::map<std::string,std::string> stringRes;
 public:
     static Windower *mainWindows;
     static ConfigLoader config;
+
 };
 
 

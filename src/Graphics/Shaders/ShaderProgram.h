@@ -28,8 +28,8 @@ public:
     ~ShaderProgram();
     void readShaders(const std::string& vertPath,const std::string& fragPath);
     void setupShader();
-    GLint compileVertexShader();
-    GLint compileFragmentShader();
+    GLuint compileVertexShader();
+    GLuint compileFragmentShader();
     void begin();
     void end();
     GLuint getUniPath(const GLchar *name);

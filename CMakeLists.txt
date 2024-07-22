@@ -61,3 +61,7 @@ target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} GLEW::
 target_include_directories(${PROJECT_NAME} PRIVATE ${OPENGL_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS})
 
 include(/home/asuka/Programs/libs/MyModules/MyLibConfig.cmake)
+
+set(nlohmann_json_DIR /home/asuka/Programs/libs/json-develop/)
+find_package(nlohmann_json REQUIRED)
+target_link_libraries(${PROJECT_NAME}    nlohmann_json::nlohmann_json)

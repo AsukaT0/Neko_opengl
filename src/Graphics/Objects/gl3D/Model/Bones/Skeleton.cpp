@@ -5,62 +5,14 @@
 #include <thread>
 #include <cmath>
 #include <unordered_set>
+#include <File/File.h>
+#include <algorithm>
 #include "Skeleton.h"
 #include "../../../../Window.h"
 #include "../../../../Math/Functionality.h"
 
 Skeleton::Skeleton(Model &model) {
-    animController.addAnim("tail_anim_001", {
-            [](std::vector<Bone> &bones, Model &model1, float status, float step) {
-                auto f = [](float start, float iter, float step) {
-                    return glm::radians(sinf(glm::radians(start * 3.6 - 11.0 * iter)) / 40.0);};
-                bones[28].funRAPZ(model1, bones, bones[28].getStart(), 0, f, status, 0);
-                bones[28].funRAPY(model1, bones, bones[28].getStart(), 0, f, status, 0);
-            },
-            [](std::vector<Bone> &bones, Model &model1) {
-                bones[28].reset(model1, bones);
-            }, 2, true, 0});
-    animController.addAnim("blink_anim_001", {
-            [](std::vector<Bone> &bones, Model &model1, float status,
-               float step) {
-                float percent_step = (step / 100);
-                bones[30].rotAPX(model1, bones, bones[30].getEnd(),
-                                 (status > 50) ? -3.0f * percent_step :  3.0f * percent_step);
-                bones[30].rotAPZ(model1, bones, bones[30].getEnd(),
-                                 (status > 50) ?  1.4f * percent_step : -1.4f * percent_step);
-                bones[36].rotAPX(model1, bones, bones[36].getEnd(),
-                                 (status > 50) ? -3.0f * percent_step :  3.0f * percent_step);
-                bones[36].rotAPZ(model1, bones, bones[36].getEnd(),
-                                 (status > 50) ? -1.4f * percent_step :  1.4f * percent_step);
-            },
-            [](std::vector<Bone> &bones, Model &model1) {
-                bones[30].reset(model1, bones);
-                bones[36].reset(model1, bones);
-            },
-            0.3, true, 4000});
-
-    animController.addAnim("ear_anim_001", {
-            [](std::vector<Bone> &bones, Model &model1, float status, float step) {
-                float percent_step = (step / 100);
-                bones[42].rotX(model1, bones, (status > 50) ? -0.5f * percent_step :  0.5f * percent_step);
-                bones[42].rotZ(model1, bones, (status > 50) ?  0.2f * percent_step : -0.2f * percent_step);
-                bones[44].rotX(model1, bones, (status > 50) ? -0.5f * percent_step :  0.5f * percent_step);
-                bones[44].rotZ(model1, bones, (status > 50) ? -0.2f * percent_step :  0.2f * percent_step);
-            },
-            [](std::vector<Bone> &bones, Model &model1) {
-                bones[42].reset(model1, bones);
-                bones[44].reset(model1, bones);
-            }, 0.1, true, 5000});
-    animController.addAnim("left_knee_anim_001", {
-            [](std::vector<Bone> &bones, Model &model1, float status, float step) {
-                bones[56 + 3].rotAPY(model1, bones,bones[56 + 2].getStart(), (status > 50) ? M_PIf * (step / 100) : -M_PIf * (step / 100));
-            },
-            [](std::vector<Bone> &bones, Model &model1) {
-                bones[56 + 3].reset(model1, bones);
-            },
-            2, true, 0});
-    animController.startAll();
-    resubInit(model);
+    initSkeleton(model);
 }
 
 void Skeleton::render(PerspectiveCamera camera) {
@@ -77,7 +29,7 @@ void Skeleton::render(PerspectiveCamera camera) {
 
 void skinWModel(Model &part, const std::string &tag, std::vector<Bone> &bones, int numActiveBones = 3) {
     vertarr &vert = part.getModelPartByTag(tag).getVertex();
-    int vertSize = (int)vert.size();
+    int vertSize = (int) vert.size();
     size_t bonesSize = bones.size();
     for (int ii1 = 0; ii1 < vertSize; ++ii1) {
         std::vector<std::pair<float, int>> weights;
@@ -116,7 +68,7 @@ void clap(std::vector<Bone> &bone, std::vector<Bone> &destBone, int &b) {
     for (auto &ii1: destBone) {
         ii1.shift(b);
     }
-    b += (int)destBone.size();
+    b += (int) destBone.size();
     for (auto &m: destBone) { bone.push_back(m); }
     destBone.clear();
 }
@@ -139,6 +91,44 @@ void Skeleton::destroy() {
     bonesArray.clear();
 }
 
+
+void Skeleton::initSkeleton(Model &model) {
+    if (checkFiles()) {
+        std::cout << "MDS File найден, и похуй, я пока не придумал как их загружать" << "\n";
+        loadSkeleton();
+        exit(-127);
+    } else {
+        std::cout << "MDS File not found, this file will be generate" << "\n";
+        resubInit(model);
+        saveSkeleton();
+    }
+    initAnimations();
+}
+
+bool Skeleton::checkFiles() {
+    std::string currentPath = File("file").getAbsolutePath();
+    currentPath = currentPath.substr(0, currentPath.size() - 5);
+    std::vector<File> f = File(currentPath).listChilds();
+    if (std::ranges::any_of(f.cbegin(), f.cend(), [](const File &o) {return o.getName().ends_with(".mds");})) {
+        return true;}
+    return false;
+}
+
+
+void Skeleton::loadSkeleton() {
+    std::string currentPath = File("file").getAbsolutePath();
+    currentPath = currentPath.substr(0, currentPath.size() - 5);
+    std::vector<File> f = File(currentPath).listChilds();
+    std::string path;
+    for(const auto& i:f){
+        if(i.getName().ends_with("mds")){
+            path = i.getAbsolutePath();
+            break;}}
+    ConfigLoader configLoader;
+    configLoader.loadFromPath(path);
+    configLoader.parseConfig();
+    std::cout << configLoader.contains("bone_data") << "\n";
+}
 
 void Skeleton::resubInit(Model &model) {
     std::vector<std::string> tags;
@@ -180,9 +170,9 @@ void Skeleton::resubInit(Model &model) {
                                             {0.05913, 2.77841, -3.90687},
 
                                             {0.067469, 1.82898, -4.16931},
-                                            {0.069297, 2.3023,  -4.05239},
+                                            {0.069297, 2.3023, -4.05239},
 
-                                            {0.051672, 1.3596,  -4.23998},
+                                            {0.051672, 1.3596, -4.23998},
                                             {0.067469, 1.82898, -4.16931},
 
                                             {0.023121, 0.898221, -4.25099},
@@ -325,63 +315,63 @@ void Skeleton::resubInit(Model &model) {
                                             {1.13268, 5.8519,  -0.294095},//11
 
                                             {1.13268,  5.8519,  -0.294095},//12
-                                            {1.14268,  5.8519,  -0.294095},//12
+                                            {1.14268,  5.8519, -0.294095},//12
 
-                                            {1.14268,  5.8519,  -0.294095},//12
+                                            {1.14268,  5.8519, -0.294095},//12
                                             {1.15268,  5.8519,  -0.294095},//12
 
-                                            {1.15268,  5.8519,  -0.294095},//12
+                                            {1.15268,  5.8519,   -0.294095},//12
                                             {4.36115,  5.70152, -0.33753},//12
 
-                                            {4.36115,  5.70152, -0.33753},//13
+                                            {4.36115,   5.70152,  -0.33753},//13
                                             {6.37529,  5.77416,  -0.172668},//13
                                             //finger no1
-                                            {6.37529,  5.77416, -0.172668},//14
+                                            {6.37529,   5.77416,  -0.172668},//14
                                             {6.94184,   5.59265,  0.251696},//14
 
-                                            {6.94184,  5.59265,  0.251696},//15
+                                            {6.94184,   5.59265,   0.251696},//15
                                             {7.06873,   5.53094,  0.33554},//15
 
                                             {7.06873,   5.53094,  0.33554},//16
                                             {7.4888,    5.41798,   0.486827},//16
                                             //finger no2-5
-                                            {6.37529,   5.77416,  -0.172668},//17
+                                            {6.37529,   5.77416,   -0.172668},//17
                                             {6.73059,   5.73378,  -0.088889},//17
                                             //finger no2
-                                            {6.73059,   5.73378,   -0.088889},//18
+                                            {6.73059,  5.73378,   -0.088889},//18
                                             {7.2377,    5.77462,   0.188738},//18
 
-                                            {7.2377,    5.77462,  0.188738},//19
+                                            {7.2377,    5.77462,   0.188738},//19
                                             {7.64508,  5.76957,   0.245342},//19
 
                                             {7.64508,   5.76957,   0.245342},//20
                                             {7.94883,   5.80196,   0.25603},//20
                                             //finger no3
-                                            {6.73059,  5.73378,   -0.088889},//21
+                                            {6.73059,   5.73378,   -0.088889},//21
                                             {7.28985,   5.80024,   -0.017824},//21
 
                                             {7.28985,   5.80024,   -0.017824},//22
                                             {7.68179,   5.76658,   0.027043},//22
 
-                                            {7.68179,   5.76658,   0.027043},//23
+                                            {7.68179,   5.76658,  0.027043},//23
                                             {8.04288,   5.79896,   0.037768},//23
                                             //finger no4
-                                            {6.73059,   5.73378,   -0.088889},//24
+                                            {6.73059,   5.73378, -0.088889},//24
                                             {7.24217,   5.72373,  -0.218898},//24
 
-                                            {7.24217,   5.72373,   -0.218898},//25
+                                            {7.24217,   5.72373, -0.218898},//25
                                             {7.64346,   5.73331, -0.181368},//25
 
-                                            {7.64346,   5.73331,  -0.181368},//26
+                                            {7.64346,  5.73331, -0.181368},//26
                                             {7.98145,   5.75932, -0.170287},//26
                                             //finger no5
                                             {6.73059,   5.73378, -0.088889},//27
                                             {7.22236,  5.71026, -0.382476},//27
 
-                                            {7.22236,   5.71026, -0.382476},//28
-                                            {7.51266,   5.67161, -0.345191},//28
+                                            {7.22236, 5.71026, -0.382476},//28
+                                            {7.51266, 5.67161, -0.345191},//28
 
-                                            {7.51266,  5.67161, -0.345191},//29
+                                            {7.51266, 5.67161, -0.345191},//29
                                             {7.7836, 5.69357, -0.33855},//29
                                             //Right arm
                                             {-0, 5.9519, -0.294095},//30
@@ -477,4 +467,99 @@ void Skeleton::resubInit(Model &model) {
             skinWModel(model, modelsIndexes[ii1][ii2], subBonesArray[ii1]);
         clap(bonesArray, subBonesArray[ii1], b);
     }
+}
+
+void Skeleton::saveSkeleton() {
+    ConfigLoader config{};
+    std::vector<std::variant<int, float, bool, std::string, ConfigLoader>> data;
+    for (auto &k: bonesArray) {
+        std::vector<std::variant<int, float, bool, std::string, ConfigLoader>> configVector;
+        std::vector<std::variant<int, float, bool, std::string, ConfigLoader>> childsVector;
+        for (auto i: k.getData()) {
+            std::vector<std::variant<int, float, bool, std::string, ConfigLoader>> vector0;
+            std::vector<std::variant<int, float, bool, std::string, ConfigLoader>> vector1;
+            for (auto j: i.weightAndIndexArray) {
+                vector0.emplace_back(j.i);
+                vector1.emplace_back(j.w);
+            }
+            ConfigLoader subConfig2;
+            subConfig2.set("model_id", i.modelID);
+            subConfig2.set("vertex_indexes", vector0);
+            subConfig2.set("vertex_weights", vector1);
+            configVector.emplace_back(subConfig2);
+        }
+        for (auto i: k.getChilds()) {
+            childsVector.emplace_back(i);
+        }
+
+        ConfigLoader subConfig0;
+        subConfig0.set("start_bone",
+                       std::vector<std::variant<int, float, bool, std::string, ConfigLoader>>{k.getStart().x,
+                                                                                              k.getStart().y,
+                                                                                              k.getStart().z});
+        subConfig0.set("end_bone", std::vector<std::variant<int, float, bool, std::string, ConfigLoader>>{k.getEnd().x,
+                                                                                                          k.getEnd().y,
+                                                                                                          k.getEnd().z});
+        subConfig0.set("data", configVector);
+        subConfig0.set("parent", k.getParent());
+        subConfig0.set("childs", childsVector);
+        data.emplace_back(subConfig0);
+    }
+    config.set("bone_data", data);
+    config.saveToPath("skel.mds");
+}
+
+void Skeleton::initAnimations() {
+    animController.addAnim("tail_anim_001", {
+            [](std::vector<Bone> &bones, Model &model1, float status, float step) {
+                auto f = [](float start, float iter, float step) {
+                    return glm::radians(sinf(glm::radians(start * 3.6 - 11.0 * iter)) / 40.0);
+                };
+                bones[28].funRAPZ(model1, bones, bones[28].getStart(), 0, f, status, 0);
+                bones[28].funRAPY(model1, bones, bones[28].getStart(), 0, f, status, 0);
+            },
+            [](std::vector<Bone> &bones, Model &model1) {
+                bones[28].reset(model1, bones);
+            }, 2, true, 0});
+
+    animController.addAnim("blink_anim_001", {
+            [](std::vector<Bone> &bones, Model &model1, float status,
+               float step) {
+                float percent_step = (step / 100);
+                bones[30].rotAPX(model1, bones, bones[30].getEnd(),
+                                 (status > 50) ? -3.0f * percent_step : 3.0f * percent_step);
+                bones[30].rotAPZ(model1, bones, bones[30].getEnd(),
+                                 (status > 50) ? 1.4f * percent_step : -1.4f * percent_step);
+                bones[36].rotAPX(model1, bones, bones[36].getEnd(),
+                                 (status > 50) ? -3.0f * percent_step : 3.0f * percent_step);
+                bones[36].rotAPZ(model1, bones, bones[36].getEnd(),
+                                 (status > 50) ? -1.4f * percent_step : 1.4f * percent_step);
+            },
+            [](std::vector<Bone> &bones, Model &model1) {
+                bones[30].reset(model1, bones);
+                bones[36].reset(model1, bones);
+            },
+            0.3, true, 4000});
+    animController.addAnim("ear_anim_001", {
+            [](std::vector<Bone> &bones, Model &model1, float status, float step) {
+                float percent_step = (step / 100);
+                bones[42].rotX(model1, bones, (status > 50) ? -0.5f * percent_step : 0.5f * percent_step);
+                bones[42].rotZ(model1, bones, (status > 50) ? 0.2f * percent_step : -0.2f * percent_step);
+                bones[44].rotX(model1, bones, (status > 50) ? -0.5f * percent_step : 0.5f * percent_step);
+                bones[44].rotZ(model1, bones, (status > 50) ? -0.2f * percent_step : 0.2f * percent_step);
+            },
+            [](std::vector<Bone> &bones, Model &model1) {
+                bones[42].reset(model1, bones);
+                bones[44].reset(model1, bones);
+            }, 0.1, true, 5000});
+    animController.addAnim("left_knee_anim_001", {
+            [](std::vector<Bone> &bones, Model &model1, float status, float step) {
+                bones[56 + 3].rotAPY(model1, bones, bones[56 + 2].getStart(),
+                                     (status > 50) ? M_PIf * (step / 100) : -M_PIf * (step / 100));
+            },
+            [](std::vector<Bone> &bones, Model &model1) {
+                bones[56 + 3].reset(model1, bones);
+            },
+            2, true, 0});
+    animController.startAll();
 }

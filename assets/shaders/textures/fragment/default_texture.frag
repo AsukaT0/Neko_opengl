@@ -29,7 +29,8 @@ void main()
             vec3 normalSample = texture(normalTexture, TexCoord + offset).rgb;
             float depthSample = texture(depthTexture, TexCoord + offset).r;
             if (distance(normalCenter, normalSample) > edgeThreshold || abs(depthCenter - depthSample) > edgeThreshold) {
-                edge = 0.5;}}}
+                edge = 0.3;
+            }}}
 
     FragColor = vec4(color.rgb-vec3(edge),color.a);
 }

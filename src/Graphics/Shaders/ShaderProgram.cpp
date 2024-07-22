@@ -2,14 +2,14 @@
 #include <File/File.h>
 #include "ShaderProgram.h"
 
-GLint ShaderProgram::compileVertexShader() {
+GLuint ShaderProgram::compileVertexShader() {
     const char* vSh = vertShader.c_str();
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vSh, nullptr);
     glCompileShader(vertexShader);
     return vertexShader;}
 
-GLint ShaderProgram::compileFragmentShader() {
+GLuint ShaderProgram::compileFragmentShader() {
     const char* fSh = fragShader.c_str();
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fSh, nullptr);
@@ -30,6 +30,9 @@ void ShaderProgram::setupShader() {
 }
 
 ShaderProgram::ShaderProgram(const std::string& vertPath, const std::string& fragPath) {
+    if(!File(fragPath).fileExists()&&File(vertPath).fileExists()){
+        throw ("Шейдер по пути "+fragPath + " или " + vertPath + "не найден\n");
+    }
     fragShader = File(fragPath).read();
     vertShader = File(vertPath).read();
     fragShader = fragShader.substr(0,fragShader.size()-1);

@@ -11,7 +11,7 @@ in vec3 FragPos;
 
 
 out vec4 FragColorOut;
-float k = 0.7;
+float k = 0.3;
 
 in vec2 texCoord;
 uniform sampler2D textureSampler;
@@ -21,8 +21,8 @@ uniform bool useTexture;
 vec3 calcDiff(vec3 FragColor) {
 	vec3 lightDir = normalize(lightPos - FragPos);
 	float diffuseFactor = max(dot(Normal, lightDir), 0.0);
-	vec3 diffuse = (lightColor * diffuseFactor + FragColor)/2;
-	return diffuse;
+	vec3 diffuse = (lightColor * diffuseFactor + FragColor);
+	return diffuse/2;
 }
 
 vec3 calcAmbi(vec3 FragColor){

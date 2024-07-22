@@ -258,7 +258,7 @@ void Bone::funRAPY(Model &part, std::vector<Bone> &bone, const Vertex &center, f
 void
 Bone::funRAPZ(Model &part, std::vector<Bone> &bone, const Vertex &center, float currentAngle,
               const std::function<float(float, float, float)> &function,
-              const float &start_a = 0, const float &iter = 0) {
+              const float &start_a = 0, const float &iter = 0)  {
     float angle = function(start_a, iter, 0) + currentAngle;
     for (const BoneData &bd: data0) {
         Model::ModelPart &modelPart = part.getModelPartByTag(bd.modelID);
@@ -350,3 +350,5 @@ void Bone::shift(int codeshifter) {
     shiftChilds(codeshifter);
     shiftParent(codeshifter);
 }
+
+std::vector<BoneData> Bone::getData() {return data0;}

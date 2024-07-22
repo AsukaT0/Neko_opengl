@@ -52,6 +52,3 @@ std::string AIModel::postProcDataFunc(const std::string &text) {
     outputText = StringUtils::multiply_replace(outputText,{{" ,",","},{" .","."},{"]",""},{"[",""}});
     return outputText;
 }
-/*
-В университет привезли {N1} кг картошки, пельменей на {N2} кг больше чем картошки, а хлеба на {N3} кг меньше чем пельменей. Сколько килограмм пельменей привезли в школьную столовую?
- */
