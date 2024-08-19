@@ -79,9 +79,7 @@ void Skeleton::render(PerspectiveCamera camera, Model &model) {
     glMultMatrixf(glm::value_ptr(camera.getProjectionMatrix() * camera.getViewMatrix()));
     glEnable(GL_DEPTH);
     animController.render(bonesArray, model);
-    for (Bone &b: bonesArray) {
-//        b.render();
-    }
+//    for (Bone &b: bonesArray) {b.render();}
     glDisable(GL_DEPTH);
     glPopMatrix();
 }
@@ -93,7 +91,7 @@ void Skeleton::destroy() {
 
 
 void Skeleton::initSkeleton(Model &model) {
-    if (checkFiles()) {
+    if (/*checkFiles()*/false) {
         std::cout << "MDS File найден, и похуй, я пока не придумал как их загружать" << "\n";
         loadSkeleton();
         exit(-127);
@@ -109,8 +107,9 @@ bool Skeleton::checkFiles() {
     std::string currentPath = File("file").getAbsolutePath();
     currentPath = currentPath.substr(0, currentPath.size() - 5);
     std::vector<File> f = File(currentPath).listChilds();
-    if (std::ranges::any_of(f.cbegin(), f.cend(), [](const File &o) {return o.getName().ends_with(".mds");})) {
-        return true;}
+    if (std::ranges::any_of(f.cbegin(), f.cend(), [](const File &o) { return o.getName().ends_with(".mds"); })) {
+        return true;
+    }
     return false;
 }
 
@@ -120,10 +119,12 @@ void Skeleton::loadSkeleton() {
     currentPath = currentPath.substr(0, currentPath.size() - 5);
     std::vector<File> f = File(currentPath).listChilds();
     std::string path;
-    for(const auto& i:f){
-        if(i.getName().ends_with("mds")){
+    for (const auto &i: f) {
+        if (i.getName().ends_with("mds")) {
             path = i.getAbsolutePath();
-            break;}}
+            break;
+        }
+    }
     ConfigLoader configLoader;
     configLoader.loadFromPath(path);
     configLoader.parseConfig();
@@ -132,6 +133,8 @@ void Skeleton::loadSkeleton() {
 
 void Skeleton::resubInit(Model &model) {
     std::vector<std::string> tags;
+
+
     std::vector<vertarr > biases = {{
                                             {-0.053564, 7.08008, -4.80352},
                                             {-0.049707, 7.17831, -5.19524},
@@ -224,60 +227,60 @@ void Skeleton::resubInit(Model &model) {
                                             {-0.07908, 1.84841, -1.51981},
                                     },
                                     {
-                                            {0.416586,  7.98582, 0.202355},
-                                            {0.416586,  7.98582, 0.302355},
+                                            {0.416586,  7.60582, 0.202355},
+                                            {0.416586,  7.60582, 0.302355},
 
-                                            {0.416586,  7.98582, 0.302355},
-                                            {0.296089,  8.02298, 0.67377},
+                                            {0.416586,  7.60582, 0.302355},
+                                            {0.296089,  7.72298, 0.67377},
 
-                                            {0.416586,  7.98582, 0.302355},
-                                            {0.395427,  8.09622, 0.667581},
+                                            {0.416586,  7.60582, 0.302355},
+                                            {0.395427,  7.79622, 0.667581},
 
-                                            {0.416586,  7.98582, 0.302355},
-                                            {0.635996,  8.12945, 0.573539},
+                                            {0.416586,  7.60582, 0.302355},
+                                            {0.635996,  7.82945, 0.573539},
 
-                                            {0.416586,  7.98582, 0.302355},
-                                            {0.758983,  8.03685, 0.445559},
+                                            {0.416586,  7.60582, 0.302355},
+                                            {0.758983,  7.73685, 0.445559},
 
-                                            {0.416586,  7.98582, 0.302355},
-                                            {0.802937,  7.99244, 0.339497},
+                                            {0.416586,  7.60582, 0.302355},
+                                            {0.802937,  7.69244, 0.339497},
                                     },
                                     {
-                                            {-0.416586, 7.98582, 0.202355},
-                                            {-0.416586, 7.98582, 0.302355},
+                                            {-0.416586,  7.60582, 0.202355},
+                                            {-0.416586,  7.60582, 0.302355},
 
-                                            {-0.416586, 7.98582, 0.302355},
-                                            {-0.296089, 8.02298, 0.67377},
+                                            {-0.416586,  7.60582, 0.302355},
+                                            {-0.296089,  7.72298, 0.67377},
 
-                                            {-0.416586, 7.98582, 0.302355},
-                                            {-0.395427, 8.09622, 0.667581},
+                                            {-0.416586,  7.60582, 0.302355},
+                                            {-0.395427,  7.79622, 0.667581},
 
-                                            {-0.416586, 7.98582, 0.302355},
-                                            {-0.635996, 8.12945, 0.573539},
+                                            {-0.416586,  7.60582, 0.302355},
+                                            {-0.635996,  7.82945, 0.573539},
 
-                                            {-0.416586, 7.98582, 0.302355},
-                                            {-0.758983, 8.03685, 0.445559},
+                                            {-0.416586,  7.60582, 0.302355},
+                                            {-0.758983,  7.73685, 0.445559},
 
-                                            {-0.416586, 7.98582, 0.302355},
-                                            {-0.802937, 7.99244, 0.339497},
+                                            {-0.416586,  7.60582, 0.302355},
+                                            {-0.802937,  7.69244, 0.339497},
                                     },
                                     {
-                                            {0.163675,  8.36924, -0.240251},
-                                            {0.665174,  9.19779, 0.015207},
+                                            {0.163675,  7.96924, -0.240251},
+                                            {0.665174,  8.79779, 0.015207},
 
-                                            {0.665174,  9.19779, 0.015207},
-                                            {1.00212,   9.6064,  0.063697},
+                                            {0.665174,  8.79779, 0.015207},
+                                            {1.00212,   9.2064,  0.063697},
                                     },
                                     {
-                                            {-0.03675,  8.36924, -0.240251},
-                                            {-0.716714, 9.14159, 0.064511},
+                                            {-0.03675,  7.96924, -0.240251},
+                                            {-0.716714, 8.74159, 0.064511},
 
-                                            {-0.716714, 9.14159, 0.064511},
-                                            {-0.984926, 9.58033, 0.256566},
+                                            {-0.716714, 8.74159, 0.064511},
+                                            {-0.984926, 9.28033, 0.256566},
                                     },
                                     {
                                             //main
-                                            {0,         1.81564, -0.13825},//4
+                                            {0,         1.01564, -0.13825},//4
                                             {0,         3.88377, -0.216172},//4
 
                                             {0,         3.88377, -0.216172},//0
@@ -293,19 +296,19 @@ void Skeleton::resubInit(Model &model) {
                                             {0,         8.36924, -0.240251},//3
 
                                             //Left leg
-                                            {0,         1.81564, -0.13825},//5
-                                            {0.983355,  1.04536, -0.316117},//5
+                                            {0,         1.01564, -0.13825},//5
+                                            {0.983355,  0.64536, -0.316117},//5
 
-                                            {0.983355, 1.04536, -0.316117},//6
+                                            {0.983355, 0.64536, -0.316117},//6
                                             {0.98945,   -3.53381, -0.220758},//6
 
                                             {0.98945,   -3.53381, -0.220758},//7
                                             {0.98945,  -8.53381, -1.420758},//7
                                             //Right leg
-                                            {-0,       1.81564, -0.13825},//8
-                                            {-0.983355, 1.04536, -0.316117},//8
+                                            {-0,       1.01564, -0.13825},//8
+                                            {-0.983355, 0.64536, -0.316117},//8
 
-                                            {-0.983355, 1.04536, -0.316117},//9
+                                            {-0.983355, 0.64536, -0.316117},//9
                                             {-0.98945, -3.53381, -0.220758},//9
 
                                             {-0.98945, -3.53381, -0.220758},//10
@@ -525,28 +528,24 @@ void Skeleton::initAnimations() {
     animController.addAnim("blink_anim_001", {
             [](std::vector<Bone> &bones, Model &model1, float status,
                float step) {
-                float percent_step = (step / 100);
-                bones[30].rotAPX(model1, bones, bones[30].getEnd(),
-                                 (status > 50) ? -3.0f * percent_step : 3.0f * percent_step);
-                bones[30].rotAPZ(model1, bones, bones[30].getEnd(),
-                                 (status > 50) ? 1.4f * percent_step : -1.4f * percent_step);
-                bones[36].rotAPX(model1, bones, bones[36].getEnd(),
-                                 (status > 50) ? -3.0f * percent_step : 3.0f * percent_step);
-                bones[36].rotAPZ(model1, bones, bones[36].getEnd(),
-                                 (status > 50) ? -1.4f * percent_step : 1.4f * percent_step);
+                float prestep = sinf(M_PI * (status / 100));
+                bones[30].setRotationX(model1, bones, bones[30].getEnd(), (M_PI / 3.3) * prestep);
+                bones[30].setRotationZ(model1, bones, bones[30].getEnd(),(-M_PI / 6.5) * prestep);
+                bones[36].setRotationX(model1, bones, bones[36].getEnd(), (M_PI / 3.3) * prestep);
+                bones[36].setRotationZ(model1, bones, bones[36].getEnd(), (M_PI / 6.5) * prestep);
             },
             [](std::vector<Bone> &bones, Model &model1) {
-                bones[30].reset(model1, bones);
-                bones[36].reset(model1, bones);
-            },
-            0.3, true, 4000});
+                model1.getModelPartByTag("eye_above_r.001").reset();
+                model1.getModelPartByTag("eye_above_l.002").reset();},
+                0.5, true, 4000});
     animController.addAnim("ear_anim_001", {
             [](std::vector<Bone> &bones, Model &model1, float status, float step) {
-                float percent_step = (step / 100);
-                bones[42].rotX(model1, bones, (status > 50) ? -0.5f * percent_step : 0.5f * percent_step);
-                bones[42].rotZ(model1, bones, (status > 50) ? 0.2f * percent_step : -0.2f * percent_step);
-                bones[44].rotX(model1, bones, (status > 50) ? -0.5f * percent_step : 0.5f * percent_step);
-                bones[44].rotZ(model1, bones, (status > 50) ? -0.2f * percent_step : 0.2f * percent_step);
+                float prestep = sinf(M_PI * (status / 100));
+
+                bones[42].setRotationX(model1, bones,(M_PI / 8) * prestep);
+                bones[42].setRotationZ(model1, bones, (M_PI / 16) * prestep);
+                bones[44].setRotationX(model1, bones,(M_PI / 8) * prestep);
+                bones[44].setRotationZ(model1, bones,-(M_PI / 16) * prestep);
             },
             [](std::vector<Bone> &bones, Model &model1) {
                 bones[42].reset(model1, bones);

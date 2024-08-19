@@ -6,6 +6,7 @@
 #include <glm/fwd.hpp>
 #include <glm/detail/type_mat4x4.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
+#include <cmath>
 #include <glm/ext/matrix_transform.hpp>
 #include "PerspectiveCamera.h"
 
@@ -34,7 +35,7 @@ PerspectiveCamera::PerspectiveCamera(float viewingAngle,float aspect,float near,
 }
 
 void PerspectiveCamera::render() {
-    projectionMatrix = glm::perspective(angle, aspect, near, far);
+    projectionMatrix = glm::perspective(glm::radians(angle), aspect, near, far);
     glm::vec3 cameraPosition(posCamX, posCamY, posCamZ);
     glm::vec3 targetPosition(posLookX, posLookY, posLookZ);
     glm::vec3 upVector(upX, upY, upZ);

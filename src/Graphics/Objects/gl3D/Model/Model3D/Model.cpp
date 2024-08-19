@@ -15,7 +15,6 @@ Model::~Model() {
 //    glDeleteVertexArrays(1, &VAO);
 //    glDeleteBuffers(1, &VBO);
 //    modelShader.destroy();
-//    outlineShader.destroy();
 }
 
 Model::Model() {
@@ -90,21 +89,24 @@ void Model::renderMain(const glm::mat4 &modelMatrix, PerspectiveCamera cam) {
     for (ModelPart i: parts) {
         buffers.getVbo().setSubData(0, offsetFin, i.getVertex());
     }
+//    glEnable(GL_CULL_FACE);
+//    glCullFace(GL_BACK);
+//    glFrontFace(GL_CCW);
     modelShader.begin();
     {
         renderSetupShader(modelMatrix, cam);
         for (ModelPart &part: parts) {
-            glActiveTexture(GL_TEXTURE0);
             part.render(modelShader);
             glDisable(GL_TEXTURE_2D);
         }
     }
     modelShader.end();
     glDisable(GL_DEPTH_TEST);
+//    glDisable(GL_CULL_FACE);
 }
 
 void Model::renderFinalFrame() {
-    glPushMatrix();
+    glPushMatrix(); 
     glLoadIdentity();
     buffers.getVao().bind(1);
     buffers.getVbo().bind(1);
@@ -161,15 +163,16 @@ void Model::render() {
 }
 
 
-Model::ModelPart::ModelPart(const vertarr &vertices, const std::vector<Normal> &normals,
+Model::ModelPart::ModelPart(vertarr vertices, const std::vector<Normal> &normals,
                             TextureUVMap textureCoords, const std::vector<std::vector<GLuint>> &indices,
                             const std::vector<Material> &color, std::string Tag)
-        : vertices(vertices), textureCoords(std::move(textureCoords)), coloredIndices(indices), normals(normals),
+        : textureCoords(std::move(textureCoords)), coloredIndices(indices), normals(normals),
           Tag(std::move(Tag)), color(color) {
     std::vector<GLuint> mergedVector;
     mergedVector.reserve(std::accumulate(indices.begin(), indices.end(), 0u,
                                          [](size_t sum, const auto &v) { return sum + v.size(); }));
     for (auto v: vertices) {
+        this->vertices.push_back(v);
         res_vertices.push_back(v);
     }
     for (const auto &i: indices) {
@@ -219,13 +222,16 @@ void Model::ModelPart::render(ShaderProgram program) {
                                                              color[ii1].getKdColor().b) : glm::vec3(1.0f);
         glUniform1i(program.getUniPath("useTexture"), color[ii1].getKdTexture().isLoaded());
         if (color[ii1].getKdTexture().isLoaded()) {
+            glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, color[ii1].getKdTexture().getTextureLink());
             glUniform1i(program.getUniPath("textureSampler"), 0);
         }
         glUniform3fv(fragColLoc, 1, &fragCol[0]);
         glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(coloredIndices[ii1].size()), GL_UNSIGNED_INT,
                        coloredIndices[ii1].data());
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
+
     renderDisabler();
 }
 
@@ -258,13 +264,15 @@ void Model::ModelPart::destroy() {
 }
 
 void Model::ModelPart::reset() {
-    std::copy(res_vertices.begin(), res_vertices.end(), vertices.begin());
+    vertices.clear();
+    for(auto i:res_vertices){
+        vertices.push_back(i);}
+//    std::copy(res_vertices.begin(), res_vertices.end(), vertices.begin());
 }
 
 void Model::destroy() {
     fbuff.destroy();
     modelShader.destroy();
-    outlineShader.destroy();
     parts.clear();
     BaseModel::destroy();
 }

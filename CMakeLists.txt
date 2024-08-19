@@ -29,7 +29,7 @@ set(MIRAI_SOURCE
         src/Graphics/Objects/gl3D/Model/Model3D/HumaModel.cpp src/Graphics/Objects/gl3D/Model/Model3D/HumaModel.h src/Graphics/Objects/gl3D/Animations/BoneAnimation.cpp src/Graphics/Objects/gl3D/Animations/BoneAnimation.h src/Graphics/Objects/gl3D/Animations/AnimationController.cpp src/Graphics/Objects/gl3D/Animations/AnimationController.h src/Graphics/Objects/Loaders/BALoaders.cpp src/Graphics/Objects/Loaders/BALoaders.h src/Graphics/Buffers/BO.cpp src/Graphics/Buffers/BO.h)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -mpopcnt")
-add_executable(${PROJECT_NAME} main.cpp ${MIRAI_SOURCE} )
+add_executable(${PROJECT_NAME} main.cpp ${MIRAI_SOURCE})
 
 set(SOIL_INCLUDE_DIRS /home/asuka/Programs/libs/soil/build/include/)
 set(SOIL_LIBRARIES /home/asuka/Programs/libs/soil/build/lib/libSOIL.so /home/asuka/Programs/libs/soil/build/lib/libSOIL.a)
@@ -47,7 +47,7 @@ target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
 
 find_package(LibArchive REQUIRED)
 include_directories(${LIBARCHIVE_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${LIBARCHIVE_LIBRARIES} -larchive )
+target_link_libraries(${PROJECT_NAME} ${LIBARCHIVE_LIBRARIES} -larchive)
 
 set(ONNX_INCLUDE_DIRS /home/asuka/Programs/libs/onnxruntime/include)
 set(ONNX_LIBRARIES /home/asuka/Programs/libs/onnxruntime/lib/libonnxruntime.so)
@@ -61,7 +61,3 @@ target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} GLEW::
 target_include_directories(${PROJECT_NAME} PRIVATE ${OPENGL_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS})
 
 include(/home/asuka/Programs/libs/MyModules/MyLibConfig.cmake)
-
-set(nlohmann_json_DIR /home/asuka/Programs/libs/json-develop/)
-find_package(nlohmann_json REQUIRED)
-target_link_libraries(${PROJECT_NAME}    nlohmann_json::nlohmann_json)

@@ -45,7 +45,8 @@ void startupFunc(){
 
 bool isNeedToUpdateData(const std::string& rawModelPath,const std::string& restructuredModelPath){
     if(!File(restructuredModelPath).fileExists()){
-        File(File(restructuredModelPath).getAbsolutePath()).makedir();}
+        File(File(restructuredModelPath).getAbsolutePath()).makedir();
+    }
     File tmp(TEMP_FILE);
     if(tmp.fileExists()){
         std::string readTmp = tmp.read();

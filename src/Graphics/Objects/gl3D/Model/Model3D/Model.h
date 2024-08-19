@@ -49,7 +49,7 @@ public:
         ModelPart() = default;
 
         ModelPart(
-                const vertarr &vertices,
+                vertarr vertices,
                 const std::vector<Normal> &normals,
                 TextureUVMap textureCoords,
                 const std::vector<std::vector<GLuint>> &indices,
@@ -94,8 +94,7 @@ private:
     s2i taggedParts{};
     FrameBuffer fbuff;
     ShaderProgram
-            modelShader,
-            outlineShader;
+            modelShader;
     BO buffers{};
 
 

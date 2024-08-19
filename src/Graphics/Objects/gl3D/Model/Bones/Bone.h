@@ -21,7 +21,8 @@ private:
     std::vector<int> childs;
     Vertex
         start{0,0,0},
-        end{0,0,0};
+        end{0,0,0},
+        rotate{0,0,0};
     Color color{};
     Model *p;
 public:
@@ -51,6 +52,13 @@ public:
     void translateY(std::vector<Bone>&bone,float dist);
     void translateZ(std::vector<Bone>&bone,float dist);
 
+    void setRotationX(Model&part, std::vector<Bone>& bone, const Vertex& center, const float& angle);
+    void setRotationY(Model&part, std::vector<Bone>& bone, const Vertex& center, const float& angle);
+    void setRotationZ(Model&part, std::vector<Bone>& bone, const Vertex& center, const float& angle);
+
+    void setRotationX(Model&part, std::vector<Bone>& bone, const float& angle);
+    void setRotationY(Model&part, std::vector<Bone>& bone, const float& angle);
+    void setRotationZ(Model&part, std::vector<Bone>& bone, const float& angle);
 
     void rotAPX(Model&part, std::vector<Bone>& bone, const Vertex& center, const float& angle);
     void rotAPY(Model&part, std::vector<Bone>& bone, const Vertex& center, const float& angle);

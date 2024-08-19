@@ -19,7 +19,8 @@ Bone::Bone(Model &part, const std::vector<int> &childs, const std::vector<std::s
     data0 = {};
     for (const std::string &s: modelIDs) {
         modelKeys[s] = data0.size();
-        data0.emplace_back(s); }
+        data0.emplace_back(s);
+    }
     this->childs = childs;
     color = getRand();
 }
@@ -29,7 +30,8 @@ Bone::Bone(Model &part, const std::vector<std::string> &modelIDs) {
     data0 = {};
     for (const std::string &s: modelIDs) {
         modelKeys[s] = data0.size();
-        data0.emplace_back(s); }
+        data0.emplace_back(s);
+    }
     color = getRand();
 }
 
@@ -49,8 +51,8 @@ void Bone::render() {
 }
 
 void Bone::addIndices(const std::string &tag, int indice, float weight) {
-    if(modelKeys.contains(tag))
-    data0[modelKeys[tag]].weightAndIndexArray.emplace_back(indice, weight);
+    if (modelKeys.contains(tag))
+        data0[modelKeys[tag]].weightAndIndexArray.emplace_back(indice, weight);
 }
 
 Vertex Bone::getStart() { return start; }
@@ -206,7 +208,7 @@ void Bone::rotAPY(Model &part, std::vector<Bone> &bone, const Vertex &center, co
         for (IW a: bd.weightAndIndexArray) {
             float cosAngle = std::cos(angle * a.w);
             float sinAngle = std::sin(angle * a.w);
-            Model::ModelPart& modelPart = part.getModelPartByTag(bd.modelID);
+            Model::ModelPart &modelPart = part.getModelPartByTag(bd.modelID);
             tetoteY(modelPart.getVertex()[a.i],
                     center, cosAngle, sinAngle);
         }
@@ -218,10 +220,11 @@ void Bone::rotAPZ(Model &part, std::vector<Bone> &bone, const Vertex &center, co
         for (IW a: bd.weightAndIndexArray) {
             float cosAngle = std::cos(angle * a.w);
             float sinAngle = std::sin(angle * a.w);
-            Model::ModelPart& modelPart = part.getModelPartByTag(bd.modelID);
+            Model::ModelPart &modelPart = part.getModelPartByTag(bd.modelID);
             tetoZ(modelPart.getVertex()[a.i],
                   center, cosAngle, sinAngle);
-        }}
+        }
+    }
     for (int ch: childs) {
         bone[ch].rotAPZ(part, bone, center, angle);
     }
@@ -231,13 +234,14 @@ void Bone::funRAPX(Model &part, std::vector<Bone> &bone, const Vertex &center, f
                    const std::function<float(float, float, float)> &function, const float &start_a, const float &iter) {
     float angle = function(start_a, iter, 0) + currentAngle;
     for (const BoneData &bd: data0) {
-        Model::ModelPart& modelPart = part.getModelPartByTag(bd.modelID);
+        Model::ModelPart &modelPart = part.getModelPartByTag(bd.modelID);
         for (IW a: bd.weightAndIndexArray) {
             float cosAngle = std::cos(angle * a.w);
             float sinAngle = std::sin(angle * a.w);
             totetoX(modelPart.getVertex()[a.i],
                     center, cosAngle, sinAngle);
-        }}
+        }
+    }
     for (int ch: childs) { bone[ch].funRAPX(part, bone, center, angle, function, start_a, iter + 1); }
 }
 
@@ -245,20 +249,21 @@ void Bone::funRAPY(Model &part, std::vector<Bone> &bone, const Vertex &center, f
                    const std::function<float(float, float, float)> &function, const float &start_a, const float &iter) {
     float angle = function(start_a, iter, 0) + currentAngle;
     for (const BoneData &bd: data0) {
-        Model::ModelPart& modelPart = part.getModelPartByTag(bd.modelID);
+        Model::ModelPart &modelPart = part.getModelPartByTag(bd.modelID);
         for (IW a: bd.weightAndIndexArray) {
             float cosAngle = std::cos(angle * a.w);
             float sinAngle = std::sin(angle * a.w);
             tetoZ(modelPart.getVertex()[a.i],
                   center, cosAngle, sinAngle);
-            }}
+        }
+    }
     for (int ch: childs) { bone[ch].funRAPY(part, bone, center, angle, function, start_a, iter + 1); }
 }
 
 void
 Bone::funRAPZ(Model &part, std::vector<Bone> &bone, const Vertex &center, float currentAngle,
               const std::function<float(float, float, float)> &function,
-              const float &start_a = 0, const float &iter = 0)  {
+              const float &start_a = 0, const float &iter = 0) {
     float angle = function(start_a, iter, 0) + currentAngle;
     for (const BoneData &bd: data0) {
         Model::ModelPart &modelPart = part.getModelPartByTag(bd.modelID);
@@ -266,7 +271,9 @@ Bone::funRAPZ(Model &part, std::vector<Bone> &bone, const Vertex &center, float 
             float cosAngle = std::cos(angle * a.w);
             float sinAngle = std::sin(angle * a.w);
             tetoZ(modelPart.getVertex()[a.i],
-                  center, cosAngle, sinAngle);}}
+                  center, cosAngle, sinAngle);
+        }
+    }
     for (int ch: childs) { bone[ch].funRAPZ(part, bone, center, angle, function, start_a, iter + 1); }
 }
 
@@ -277,9 +284,12 @@ void Bone::destroy() {
 }
 
 void Bone::reset(Model &part, std::vector<Bone> &bone) {
-    for (int ch: childs) { bone[ch].reset(part, bone); }
-    for (const BoneData &bd: data0)
+    for (int ch: childs) {
+        bone[ch].reset(part, bone);
+    }
+    for (const BoneData &bd: data0) {
         part.getModelPartByTag(bd.modelID).reset();
+    }
 }
 
 void Bone::rotX(std::vector<Bone> &bone, float angle) {
@@ -334,7 +344,7 @@ void Bone::setParent(int index) { parent = index; }
 
 int Bone::getParent() const { return parent; }
 
-void Bone::shiftParent(int codeshifter) { if(parent!=-1)parent += codeshifter; }
+void Bone::shiftParent(int codeshifter) { if (parent != -1)parent += codeshifter; }
 
 void Bone::shiftChilds(int codeshifter) {
     for (int &boneI: childs) {
@@ -351,4 +361,55 @@ void Bone::shift(int codeshifter) {
     shiftParent(codeshifter);
 }
 
-std::vector<BoneData> Bone::getData() {return data0;}
+std::vector<BoneData> Bone::getData() { return data0; }
+
+void Bone::setRotationX(Model &part, std::vector<Bone> &bone, const Vertex &center, const float &angle) {
+    float realDegree = angle - rotate.x;
+    for (const BoneData &bd: data0)
+        for (IW a: bd.weightAndIndexArray) {
+            float cosAngle = std::cos(realDegree * a.w);
+            float sinAngle = std::sin(realDegree * a.w);
+            totetoX(part.getModelPartByTag(bd.modelID).getVertex()[a.i],
+                    center, cosAngle, sinAngle);
+        }
+    rotate.x = angle;
+    for (int ch: childs) { bone[ch].setRotationX(part, bone, center, angle); }
+}
+
+void Bone::setRotationY(Model &part, std::vector<Bone> &bone, const Vertex &center, const float &angle) {
+    float realDegree = angle - rotate.y;
+    for (const BoneData &bd: data0)
+        for (IW a: bd.weightAndIndexArray) {
+            float cosAngle = std::cos(realDegree * a.w);
+            float sinAngle = std::sin(realDegree * a.w);
+            tetoteY(part.getModelPartByTag(bd.modelID).getVertex()[a.i],
+                    center, cosAngle, sinAngle);
+        }
+    rotate.y = angle;
+    for (int ch: childs) { bone[ch].setRotationY(part, bone, center, angle); }
+}
+
+void Bone::setRotationZ(Model &part, std::vector<Bone> &bone, const Vertex &center, const float &angle) {
+    float realDegree = angle - rotate.z;
+    for (const BoneData &bd: data0)
+        for (IW a: bd.weightAndIndexArray) {
+            float cosAngle = std::cos(realDegree * a.w);
+            float sinAngle = std::sin(realDegree * a.w);
+            tetoZ(part.getModelPartByTag(bd.modelID).getVertex()[a.i],
+                  center, cosAngle, sinAngle);
+        }
+    rotate.z = angle;
+    for (int ch: childs) { bone[ch].setRotationZ(part, bone, center, angle); }
+}
+
+void Bone::setRotationX(Model &part, std::vector<Bone> &bone, const float &angle) {
+    setRotationX(part, bone, start, angle);
+}
+
+void Bone::setRotationY(Model &part, std::vector<Bone> &bone, const float &angle) {
+    setRotationY(part, bone, start, angle);
+}
+
+void Bone::setRotationZ(Model &part, std::vector<Bone> &bone, const float &angle) {
+    setRotationZ(part, bone, start, angle);
+}

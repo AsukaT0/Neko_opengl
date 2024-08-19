@@ -31,6 +31,7 @@ public:
     bool isLoaded();
 
     void destroy();
+    ~Texture();
 };
 
 

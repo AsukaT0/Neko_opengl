@@ -15,11 +15,11 @@ void GraphicsClass::onCreate() {
     std::string model3DPath = graphics.getSubConfig("model3D").getString("path");
     graphics.finalize();
     model = ObjLoader::load(model3DPath);
-    cam = PerspectiveCamera(45.0, 1.0, 0.1, 100.0,
+    cam = PerspectiveCamera(60.0, 1.0, 0.1, 100.0,
                             0.0, 0.0, 0.0,
-                            0.0, /*7.98582*/0, 0.0,
+                            0.0, 7.985820, 0.0,
                             0.0, 1.0, 0.0);
-    position = {8,7.98582+2.0,18};
+    position = {0,7.98582,8};
 }
 
 void GraphicsClass::onRender() {
@@ -36,8 +36,8 @@ void GraphicsClass::onRender() {
 void GraphicsClass::updateCam() {
     degree += 0.5;
     if(degree >= 360){degree = 0;}
-    position.x = 18*sinf(degree/k);
-    position.z = 18*cosf(degree/k);
+    position.x = 4*sinf(degree/k);
+    position.z = 4*cosf(degree/k);
     model.lookAt(position);
 }
 

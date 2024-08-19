@@ -63,14 +63,6 @@ Texture::Texture() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     isSetupped = true;
-    if (!imgPath.empty()) {
-        int width, height;
-        unsigned char *image = SOIL_load_image(&imgPath[0], &width, &height, nullptr, SOIL_LOAD_RGB);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        SOIL_free_image_data(image);
-        glBindTexture(GL_TEXTURE_2D, tex);
-    }
 };
 
 void Texture::loadImg(const std::string &path) {
@@ -78,15 +70,31 @@ void Texture::loadImg(const std::string &path) {
     if (!isSetupped) {
         return;
     }
+
     int width, height;
-    unsigned char *image = SOIL_load_image(&path[0], &width, &height, nullptr, SOIL_LOAD_RGBA);
+    unsigned char *image = SOIL_load_image(path.c_str(), &width, &height, nullptr, SOIL_LOAD_RGBA);
+
+    if (image == nullptr) {
+        std::cerr << "Failed to load image: " << path << std::endl;
+        return;
+    }
+
+    glBindTexture(GL_TEXTURE_2D, tex);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
     glGenerateMipmap(GL_TEXTURE_2D);
     SOIL_free_image_data(image);
-    glBindTexture(GL_TEXTURE_2D, tex);
 }
 
 bool Texture::isLoaded() {
+    if(!imgPath.empty()&&tex == 0){
+        loadImg(imgPath);
+    }
     return !imgPath.empty();
 }
 
@@ -94,6 +102,10 @@ void Texture::destroy() {
     glDeleteTextures(1, &tex);
     doing = [] {};
     imgPath.clear();
+}
+
+Texture::~Texture() {
+//    glDeleteTextures(1,&tex);
 }
 
 

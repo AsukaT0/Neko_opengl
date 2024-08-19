@@ -5,7 +5,7 @@
 #include "TextureUVMap.h"
 
 TextureCoord *TextureUVMap::getTextureCoordsLink() {
-    return &interCoords[0];}
+    return interCoords.data();}
 
 std::vector<TextureCoord> &TextureUVMap::getCoords() {
     return interCoords;}
