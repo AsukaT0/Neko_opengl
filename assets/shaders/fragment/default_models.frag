@@ -29,13 +29,12 @@ vec3 calcAmbi(vec3 FragColor){
 	vec3 ambient = (FragColor);
 	return ambient;
 }
+vec4 calc(vec3 col){
+	return vec4(calcAmbi(col)*(1 - k) + calcDiff(col)*k,1);
+}
 
 void main(){
-	vec4 finalColor = vec4(calcAmbi(FragColor)*(1 - k) + calcDiff(FragColor)*k,1);
-	if (useTexture) {
-		vec3 col = vec3(texture(textureSampler, texCoord).rgb);
-		finalColor= vec4(calcAmbi(col)*(1 - k) + calcDiff(col)*k,1);
-	}
-
-	FragColorOut = finalColor;
+	FragColorOut = calc(useTexture?
+						vec3(texture(textureSampler, texCoord).rgb):
+						FragColor);
 }

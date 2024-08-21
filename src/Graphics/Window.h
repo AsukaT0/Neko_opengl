@@ -10,7 +10,7 @@
 #include <functional>
 #include <queue>
 #include "Objects/gl3D/Model/Model3D/Model.h"
-#include "../Workers/Application.h"
+#include "Scene/Application.h"
 
 class Windower {
 private:

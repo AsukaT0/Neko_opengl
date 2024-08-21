@@ -11,6 +11,7 @@
 #include "../../../../Buffers/FrameBuffer.h"
 #include "../../../gl2D/TextureUVMap.h"
 #include "../../../../Buffers/BO.h"
+#include "../../../../Math/BoundingBox.h"
 #include <File/ConfigLoader.h>
 
 #ifndef MIRAAI_MODELPART_H
@@ -43,6 +44,9 @@ public:
         std::vector<Material> color;
         std::string Tag;
         Vertex geom_center{0, 0, 0};
+
+        BoundingBox box;
+
         void renderEnabler();
         void renderDisabler();
     public:

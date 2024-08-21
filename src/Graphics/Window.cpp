@@ -64,7 +64,8 @@ void Windower::frameLim() {
     auto frameStart = std::chrono::high_resolution_clock::now();
     if (currAplic != nullptr) {
         currAplic->onRender();
-        glFlush();}
+        glfwSwapBuffers(window);
+    }
     glfwPollEvents();
     auto frameEnd = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> frameDuration = frameEnd - frameStart;
@@ -74,10 +75,12 @@ void Windower::frameLim() {
 
 
 void Windower::windowSetups() {
+//    glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
-    glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_FALSE);
+    glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
     glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
     glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
+
     glfwWindowHint(GLFW_CONTEXT_RELEASE_BEHAVIOR, GLFW_RELEASE_BEHAVIOR_FLUSH);
 }
 

@@ -537,7 +537,7 @@ void Skeleton::initAnimations() {
             [](std::vector<Bone> &bones, Model &model1) {
                 model1.getModelPartByTag("eye_above_r.001").reset();
                 model1.getModelPartByTag("eye_above_l.002").reset();},
-                0.5, true, 4000});
+                    0.5, true, 4000});
     animController.addAnim("ear_anim_001", {
             [](std::vector<Bone> &bones, Model &model1, float status, float step) {
                 float prestep = sinf(M_PI * (status / 100));

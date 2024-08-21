@@ -11,7 +11,7 @@
 #include "src/Graphics/Objects/gl3D/Camera/PerspectiveCamera.h"
 #include "src/Graphics/Objects/Loaders/ObjLoader.h"
 #include "src/Controller.h"
-#include "src/Workers/GraphicsClass.h"
+#include "src/Graphics/Scene/GraphicsClass.h"
 #include <Utils/Stopwatch.h>
 #include <Net/Server/SServer6.h>
 #include <sys/socket.h>
@@ -142,6 +142,7 @@ void onExit(int signal){
     exit(signal);
 }
 int main() {
+
     std::signal(SIGINT, onExit);
     std::signal(SIGTERM, onExit);
     Stopwatch t{};

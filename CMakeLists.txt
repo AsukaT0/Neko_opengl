@@ -11,7 +11,6 @@ set(MIRAI_SOURCE
         src/Graphics/Buffers/FrameBuffer.cpp src/Graphics/Buffers/FrameBuffer.h
         src/Graphics/Math/Structs.h
         src/Graphics/Math/Functionality.cpp src/Graphics/Math/Functionality.h
-        src/Graphics/Scene/Scene.cpp src/Graphics/Scene/Scene.h
         src/Graphics/Shaders/ShaderProgram.cpp src/Graphics/Shaders/ShaderProgram.h
         src/Graphics/Objects/Materials/Material.cpp src/Graphics/Objects/Materials/Material.h
         src/Graphics/Objects/Loaders/ObjLoader.cpp src/Graphics/Objects/Loaders/ObjLoader.h
@@ -21,12 +20,12 @@ set(MIRAI_SOURCE
         src/Graphics/Objects/gl3D/BaseModel.cpp src/Graphics/Objects/gl3D/BaseModel.h
         src/Graphics/Objects/gl3D/Lights/DiffusionLight.cpp src/Graphics/Objects/gl3D/Lights/DiffusionLight.h
         src/Graphics/Objects/gl2D/Texture.cpp src/Graphics/Objects/gl2D/Texture.h
-        src/Workers/GraphicsClass.cpp src/Workers/GraphicsClass.h
-        src/Workers/Application.cpp src/Workers/Application.h
+        src/Graphics/Scene/GraphicsClass.cpp src/Graphics/Scene/GraphicsClass.h
+        src/Graphics/Scene/Application.cpp src/Graphics/Scene/Application.h
         src/Graphics/Objects/gl3D/Model/Bones/Bone.cpp src/Graphics/Objects/gl3D/Model/Bones/Bone.h
         src/Graphics/Objects/gl3D/Model/Bones/Skeleton.cpp src/Graphics/Objects/gl3D/Model/Bones/Skeleton.h
         src/Graphics/Objects/gl2D/TextureUVMap.cpp src/Graphics/Objects/gl2D/TextureUVMap.h
-        src/Graphics/Objects/gl3D/Model/Model3D/HumaModel.cpp src/Graphics/Objects/gl3D/Model/Model3D/HumaModel.h src/Graphics/Objects/gl3D/Animations/BoneAnimation.cpp src/Graphics/Objects/gl3D/Animations/BoneAnimation.h src/Graphics/Objects/gl3D/Animations/AnimationController.cpp src/Graphics/Objects/gl3D/Animations/AnimationController.h src/Graphics/Objects/Loaders/BALoaders.cpp src/Graphics/Objects/Loaders/BALoaders.h src/Graphics/Buffers/BO.cpp src/Graphics/Buffers/BO.h)
+        src/Graphics/Objects/gl3D/Model/Model3D/HumaModel.cpp src/Graphics/Objects/gl3D/Model/Model3D/HumaModel.h src/Graphics/Objects/gl3D/Animations/BoneAnimation.cpp src/Graphics/Objects/gl3D/Animations/BoneAnimation.h src/Graphics/Objects/gl3D/Animations/AnimationController.cpp src/Graphics/Objects/gl3D/Animations/AnimationController.h src/Graphics/Objects/Loaders/BALoaders.cpp src/Graphics/Objects/Loaders/BALoaders.h src/Graphics/Buffers/BO.cpp src/Graphics/Buffers/BO.h src/Graphics/Math/BoundingBox.cpp src/Graphics/Math/BoundingBox.h)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -mpopcnt")
 add_executable(${PROJECT_NAME} main.cpp ${MIRAI_SOURCE})

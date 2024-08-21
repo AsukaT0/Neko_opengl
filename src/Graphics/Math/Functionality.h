@@ -21,6 +21,9 @@ public:
     static std::vector<Vertex> exPByNorms(const std::vector<Vertex>&vert, const std::vector<Normal> &norm,
                                           const std::vector<GLuint>&indi, float factor);
     static double distToSeg(Vertex p, Vertex l1, Vertex l2);
+    static float calculateAngle(Vertex A, Vertex B, Vertex C, Vertex D);
+    static bool intersectLineBox(const Vertex& lineStart, const Vertex& lineEnd,
+                          const Vertex& boxMin, const Vertex& boxMax);
 };
 
 

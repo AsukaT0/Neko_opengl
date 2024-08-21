@@ -89,20 +89,26 @@ void Model::renderMain(const glm::mat4 &modelMatrix, PerspectiveCamera cam) {
     for (ModelPart i: parts) {
         buffers.getVbo().setSubData(0, offsetFin, i.getVertex());
     }
-//    glEnable(GL_CULL_FACE);
-//    glCullFace(GL_BACK);
-//    glFrontFace(GL_CCW);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+
+//    glEnable(GL_MULTISAMPLE);
     modelShader.begin();
+    glEnable(GL_TEXTURE_2D);
+    glActiveTexture(GL_TEXTURE0);
     {
         renderSetupShader(modelMatrix, cam);
         for (ModelPart &part: parts) {
             part.render(modelShader);
-            glDisable(GL_TEXTURE_2D);
         }
     }
+    glDisable(GL_TEXTURE_2D);
     modelShader.end();
     glDisable(GL_DEPTH_TEST);
-//    glDisable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
+//    glDisable(GL_MULTISAMPLE);
+
 }
 
 void Model::renderFinalFrame() {
@@ -188,9 +194,15 @@ Model::ModelPart::ModelPart(vertarr vertices, const std::vector<Normal> &normals
         }
         geom_center = vert;
     }).join();
+    std::thread([&] {
+        box.calc(vertices);
+    }).join();
+
 }
 
-void Model::ModelPart::setVertex(const vertarr &data) { vertices = data; }
+void Model::ModelPart::setVertex(const vertarr &data) {
+    box.calc(data);
+    vertices = data; }
 
 vertarr &Model::ModelPart::getVertex() { return vertices; }
 
@@ -222,7 +234,6 @@ void Model::ModelPart::render(ShaderProgram program) {
                                                              color[ii1].getKdColor().b) : glm::vec3(1.0f);
         glUniform1i(program.getUniPath("useTexture"), color[ii1].getKdTexture().isLoaded());
         if (color[ii1].getKdTexture().isLoaded()) {
-            glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, color[ii1].getKdTexture().getTextureLink());
             glUniform1i(program.getUniPath("textureSampler"), 0);
         }

@@ -59,3 +59,35 @@ double Functionality::distToSeg(Vertex p, Vertex l1, Vertex l2) {
         Vertex l = l1+v*proj;
         return sqrtf((p.x - l.x) * (p.x - l.x) + (p.y - l.y) * (p.y - l.y) + (p.z - l.z) * (p.z - l.z));}
 }
+
+float Functionality::calculateAngle(Vertex A, Vertex B, Vertex C, Vertex D) {
+    float AB[3] = { B.x - A.x, B.y - A.y, B.z - A.z };
+    float CD[3] = { D.x - C.x, D.y - C.y, D.z - C.z };
+    float dotProduct = AB[0] * CD[0] + AB[1] * CD[1] + AB[2] * CD[2];
+    float lengthAB = std::sqrt(AB[0] * AB[0] + AB[1] * AB[1] + AB[2] * AB[2]);
+    float lengthCD = std::sqrt(CD[0] * CD[0] + CD[1] * CD[1] + CD[2] * CD[2]);
+    float cosTheta = dotProduct / (lengthAB * lengthCD);
+    return std::acos(cosTheta);
+}
+
+bool Functionality::intersectLineBox(const Vertex &lineStart, const Vertex &lineEnd, const Vertex &boxMin,
+                                     const Vertex &boxMax) {
+    Vertex dir = lineEnd - lineStart;
+    float tmin = (boxMin.x - lineStart.x) / dir.x;
+    float tmax = (boxMax.x - lineStart.x) / dir.x;
+    if (tmin > tmax) std::swap(tmin, tmax);
+    float tymin = (boxMin.y - lineStart.y) / dir.y;
+    float tymax = (boxMax.y - lineStart.y) / dir.y;
+    if (tymin > tymax) std::swap(tymin, tymax);
+    if ((tmin > tymax) || (tymin > tmax))
+        return false;
+    if (tymin > tmin)
+        tmin = tymin;
+    if (tymax < tmax)
+        tmax = tymax;
+    float tzmin = (boxMin.z - lineStart.z) / dir.z;
+    float tzmax = (boxMax.z - lineStart.z) / dir.z;
+    if (tzmin > tzmax) std::swap(tzmin, tzmax);
+    if ((tmin > tzmax) || (tzmin > tmax))
+        return false;
+    return true;}

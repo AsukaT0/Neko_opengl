@@ -1,3 +1,0 @@
-/home/asuka/Mira/Resources/Darlight/Mirai/cmake-build-debug/CMakeFiles/Mirai.dir
-/home/asuka/Mira/Resources/Darlight/Mirai/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/asuka/Mira/Resources/Darlight/Mirai/cmake-build-debug/CMakeFiles/rebuild_cache.dir
