@@ -13,8 +13,8 @@ void HumaModel::processing() {
             eyeIndex.push_back(i);
         }
     }
-    std::thread([this]{ skel = Skeleton(*this); }).join();
 }
+
 
 HumaModel::HumaModel(const std::vector<Model::ModelPart>& parts) : Model(parts) {
     processing();
@@ -59,4 +59,12 @@ void HumaModel::render(PerspectiveCamera camera) {
 void HumaModel::destroy() {
     skel.destroy();
     Model::destroy();
+}
+
+void HumaModel::loadSkeleton(const std::string& path) {
+    std::thread([this, path]{
+        skel = Skeleton();
+        skel.loadSkelFile(path);
+        skel.initSkeleton(*this);
+    }).join();
 }

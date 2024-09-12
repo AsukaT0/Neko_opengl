@@ -413,3 +413,28 @@ void Bone::setRotationY(Model &part, std::vector<Bone> &bone, const float &angle
 void Bone::setRotationZ(Model &part, std::vector<Bone> &bone, const float &angle) {
     setRotationZ(part, bone, start, angle);
 }
+
+Bone::Bone(Model &part) {
+    p = &part;
+    color = getRand();
+}
+
+Bone::Bone(Model &part, const std::vector<int> &childs) {
+    p = &part;
+    color = getRand();
+    this->childs = childs;
+
+}
+
+void Bone::setModelPart(Model &part) {
+    p = &part;
+}
+
+void Bone::setModelIDs(const std::vector<std::string> &modelIDs) {
+    data0 = {};
+    for (const std::string &s: modelIDs) {
+        modelKeys[s] = data0.size();
+        data0.emplace_back(s);
+    }
+
+}

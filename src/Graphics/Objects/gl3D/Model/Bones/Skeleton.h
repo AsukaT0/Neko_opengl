@@ -17,27 +17,24 @@ private:
     void resubInit(Model &model);
 
     Bone mainBone{};
+//    std::vector<vertarr > rawArray;
     std::vector<Bone> bonesArray;
     std::vector<std::vector<Bone>> subBonesArray;
     std::vector<std::vector<std::string>> modelsIndexes;
     AnimationController animController;
 
-    bool checkFiles();
-    void loadSkeleton();
-    void initSkeleton(Model &model);
+    //    void initSkeleton(Model &model);
     void saveSkeleton();
     void initAnimations();
-
 public:
     Skeleton() = default;
-
-    Skeleton(Model &model);
-
     void render(PerspectiveCamera camera);
-
     void render(PerspectiveCamera camera, Model &model);
-
     void destroy();
+
+    void loadSkelFile(std::string path);
+    void initSkeleton(Model &model);
+
 };
 
 

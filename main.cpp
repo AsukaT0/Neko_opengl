@@ -6,7 +6,7 @@
 #include <Utils/Utils.h>
 #include <Utils/StringUtils.h>
 #include <File/Archiver.h>
-#include "src/AI/AIModel.h"
+//#include "src/AI/AIModel.h"
 #include "src/Graphics/Window.h"
 #include "src/Graphics/Objects/gl3D/Camera/PerspectiveCamera.h"
 #include "src/Graphics/Objects/Loaders/ObjLoader.h"
@@ -100,6 +100,7 @@ void modelRestructuringFunc(const std::string& rawModelPath,const std::string& r
     stopwatch.stop(END_RESTRUCTURED_LABEL);
 }
 
+/*
 void serverProcessing(ConfigLoader config, AIModel& miraAI){
     SServer6::start(0,config.getInt("port"),[&](const int socket_id){
         constexpr int bufferS = 2048*32;char buffer[bufferS] = {0};std::string message;
@@ -123,20 +124,22 @@ void consoleProcessing(ConfigLoader config,AIModel& miraAI){
             std::getline(std::cin,consoleInput);
             std::string consoleOutput = miraAI.forward(consoleInput);
             std::cout << consoleOutput << "\n";}}}
+*/
 
 std::thread th3,th4;
 void createAnything(){
     startupFunc();
     modelRestructuringFunc(Controller::config.getString("raw_model_path"),Controller::config.getString("restructured_model_path"));
-    AIModel miraAI(Controller::config.getString("restructured_model_path"));
-    th3 = std::thread([&]{
-        if(Controller::config.getSubConfig("server").getBool("active")){
-            serverProcessing(Controller::config.getSubConfig("server"), miraAI);
-        }});
-    th4 = std::thread([&]{
-        if(Controller::config.getSubConfig("console").getBool("active")){
-            consoleProcessing(Controller::config.getSubConfig("console"), miraAI);
-        }});}
+//    AIModel miraAI(Controller::config.getString("restructured_model_path"));
+//    th3 = std::thread([&]{
+//        if(Controller::config.getSubConfig("server").getBool("active")){
+//            serverProcessing(Controller::config.getSubConfig("server"), miraAI);
+//        }});
+//    th4 = std::thread([&]{
+//        if(Controller::config.getSubConfig("console").getBool("active")){
+//            consoleProcessing(Controller::config.getSubConfig("console"), miraAI);
+//        }});
+        }
 void onExit(int signal){
     window.onExit();
     exit(signal);

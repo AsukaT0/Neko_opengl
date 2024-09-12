@@ -28,7 +28,9 @@ private:
 public:
     Bone();
     Bone(Model&part,const std::vector<std::string>&modelIDs);
+    Bone(Model&part);
     Bone(Model&part,const std::vector<int>&childs,const std::vector<std::string>& modelIDs);
+    Bone(Model&part,const std::vector<int>&childs);
     void setPos(Vertex v1,Vertex v2);
 
     void addChild(int index);
@@ -36,6 +38,7 @@ public:
 
     void setParent(int index);
     [[nodiscard]] int getParent() const;
+
     void shiftChilds(int codeshifter);
     void shiftParent(int codeshifter);
     void shift(int codeshifter);
@@ -82,6 +85,8 @@ public:
 
     void destroy();
     void reset(Model&part, std::vector<Bone>&bone);
+    void setModelIDs(const std::vector<std::string>&modelIDs);
+    void setModelPart(Model&part);
     std::vector<BoneData> getData();
 };
 

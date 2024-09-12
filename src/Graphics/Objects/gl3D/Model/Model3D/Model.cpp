@@ -89,9 +89,9 @@ void Model::renderMain(const glm::mat4 &modelMatrix, PerspectiveCamera cam) {
     for (ModelPart i: parts) {
         buffers.getVbo().setSubData(0, offsetFin, i.getVertex());
     }
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
+//    glEnable(GL_CULL_FACE);
+//    glCullFace(GL_BACK);
+//    glFrontFace(GL_CCW);
 
 //    glEnable(GL_MULTISAMPLE);
     modelShader.begin();
@@ -106,7 +106,7 @@ void Model::renderMain(const glm::mat4 &modelMatrix, PerspectiveCamera cam) {
     glDisable(GL_TEXTURE_2D);
     modelShader.end();
     glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
+//    glDisable(GL_CULL_FACE);
 //    glDisable(GL_MULTISAMPLE);
 
 }

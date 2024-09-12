@@ -20,6 +20,7 @@ public:
     HumaModel(const std::vector<Model::ModelPart>& parts);
     HumaModel(const Model& model);
     void lookAt(const Vertex& pos);
+    void loadSkeleton(const std::string& path);
     void render(PerspectiveCamera camera) override;
     void destroy();
 };
