@@ -8,7 +8,7 @@ void AnimationController::startAnim(int index) {
     anims[index].start();
 }
 
-void AnimationController::render(std::vector<Bone> &bonesArray, Model &model1) {
+void AnimationController::render(std::vector<Bone> &bonesArray, Model *model1) {
     for(auto & anim : anims){
         anim.render(bonesArray,model1);}
 }

@@ -8,13 +8,13 @@
 #include <utility>
 
 
-BoneAnimation::BoneAnimation(std::function<void(std::vector<Bone> &, Model &, float, float)> function, float time_s,
+BoneAnimation::BoneAnimation(std::function<void(std::vector<Bone> &, Model *, float, float)> function, float time_s,
                              bool cycle, float delay) : function(std::move(function)), cycle(cycle),
                                                         delay2tweenAnim(delay) {
     animTime = time_s;
 }
 
-void BoneAnimation::run(std::vector<Bone> &bonesArray, Model &model1) {
+void BoneAnimation::run(std::vector<Bone> &bonesArray, Model *model1) {
     function(bonesArray, model1, 0, 0);
 }
 
@@ -22,7 +22,7 @@ double BoneAnimation::calc() {
     return 100.0 / (animTime / Controller::mainWindows->getFramerate());
 }
 
-void BoneAnimation::render(std::vector<Bone> &bonesArray, Model &model1) {
+void BoneAnimation::render(std::vector<Bone> &bonesArray, Model *model1) {
     if (status >= 100) {
 
         if (!cycle) {
@@ -61,7 +61,7 @@ void BoneAnimation::destroy() {
     function = nullptr;
 }
 
-void BoneAnimation::setOnEnd(const std::function<void(std::vector<Bone> &, Model &)> &func) {
+void BoneAnimation::setOnEnd(const std::function<void(std::vector<Bone> &, Model *)> &func) {
     end = func;
 }
 
@@ -69,8 +69,8 @@ void BoneAnimation::setDelay(long long delay) {
     delay2tweenAnim = delay;
 }
 
-BoneAnimation::BoneAnimation(std::function<void(std::vector<Bone> &, Model &, float, float)> function,
-                             std::function<void(std::vector<Bone> &, Model &)> endFunction, float time_s, bool cycle,
+BoneAnimation::BoneAnimation(std::function<void(std::vector<Bone> &, Model *, float, float)> function,
+                             std::function<void(std::vector<Bone> &, Model *)> endFunction, float time_s, bool cycle,
                              float delay) :
         function(std::move(function)), end(std::move(endFunction)), cycle(cycle), delay2tweenAnim(delay) {
     animTime = time_s;

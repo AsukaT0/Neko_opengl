@@ -25,19 +25,24 @@ private:
         rotate{0,0,0};
     Color color{};
     Model *p;
+    std::vector<Bone> *boneArr;
 public:
     Bone();
     Bone(Model&part,const std::vector<std::string>&modelIDs);
     Bone(Model&part);
     Bone(Model&part,const std::vector<int>&childs,const std::vector<std::string>& modelIDs);
     Bone(Model&part,const std::vector<int>&childs);
-    void setPos(Vertex v1,Vertex v2);
-
     void addChild(int index);
-    [[nodiscard]] std::vector<int> getChilds() const;
 
+    void setModelIDs(const std::vector<std::string>&modelIDs);
+    void setModelPart(Model*part);
     void setParent(int index);
+    void setPos(Vertex v1,Vertex v2);
+    void setBonesArray(std::vector<Bone> *bones);
+
     [[nodiscard]] int getParent() const;
+    [[nodiscard]] std::vector<int> getChilds() const;
+    std::vector<BoneData> getData();
 
     void shiftChilds(int codeshifter);
     void shiftParent(int codeshifter);
@@ -51,43 +56,39 @@ public:
     Vertex getStart();
     Vertex getEnd();
 
-    void translateX(std::vector<Bone>&bone,float dist);
-    void translateY(std::vector<Bone>&bone,float dist);
-    void translateZ(std::vector<Bone>&bone,float dist);
+    void translateX(float dist);
+    void translateY(float dist);
+    void translateZ(float dist);
 
-    void setRotationX(Model&part, std::vector<Bone>& bone, const Vertex& center, const float& angle);
-    void setRotationY(Model&part, std::vector<Bone>& bone, const Vertex& center, const float& angle);
-    void setRotationZ(Model&part, std::vector<Bone>& bone, const Vertex& center, const float& angle);
+    void setRotationX(const Vertex &center, const float &angle);
+    void setRotationY(const Vertex &center, const float &angle);
+    void setRotationZ(const Vertex &center, const float &angle);
 
-    void setRotationX(Model&part, std::vector<Bone>& bone, const float& angle);
-    void setRotationY(Model&part, std::vector<Bone>& bone, const float& angle);
-    void setRotationZ(Model&part, std::vector<Bone>& bone, const float& angle);
+    void setRotationX(const float &angle);
+    void setRotationY(const float &angle);
+    void setRotationZ(const float &angle);
 
-    void rotAPX(Model&part, std::vector<Bone>& bone, const Vertex& center, const float& angle);
-    void rotAPY(Model&part, std::vector<Bone>& bone, const Vertex& center, const float& angle);
-    void rotAPZ(Model&part, std::vector<Bone>& bone, const Vertex& center, const float& angle);
-    void degRAPX(Model&part, std::vector<Bone>& bone, const Vertex& center, float angle);
-    void degRAPY(Model&part, std::vector<Bone>& bone, const Vertex& center, float angle);
-    void degRAPZ(Model&part, std::vector<Bone>& bone, const Vertex& center, float angle);
-    [[maybe_unused]] void rotAPX(std::vector<Bone>& bone, const Vertex& center, float angle);
-    [[maybe_unused]] void rotAPY(std::vector<Bone>& bone, const Vertex& center, float angle);
-    [[maybe_unused]] void rotAPZ(std::vector<Bone>& bone, const Vertex& center, float angle);
+    void rotAPX(const Vertex &center, const float &angle);
+    void rotAPZ(const Vertex &center, const float &angle);
+    void rotAPY(const Vertex &center, const float &angle);
 
-    [[maybe_unused]] void rotX(Model&part, std::vector<Bone>&bone, float angle);
-    [[maybe_unused]] void rotY(Model&part, std::vector<Bone>&bone, float angle);
-    [[maybe_unused]] void rotZ(Model&part, std::vector<Bone>&bone, float angle);
-    [[maybe_unused]] void rotX(std::vector<Bone>&bone, float angle);
-    [[maybe_unused]] void rotY(std::vector<Bone>&bone, float angle);
-    [[maybe_unused]] void rotZ(std::vector<Bone>&bone, float angle);
-    void funRAPX(Model&part, std::vector<Bone>& bone, const Vertex &center,float currentAngle, const std::function<float (float start, float iter, float step)>& function, const float& start_a, const float& iter);
-    void funRAPY(Model&part, std::vector<Bone>& bone, const Vertex &center,float currentAngle, const std::function<float (float start, float iter, float step)>& function, const float& start_a, const float& iter);
-    void funRAPZ(Model&part, std::vector<Bone>& bone, const Vertex &center,float currentAngle, const std::function<float (float start, float iter, float step)>& function, const float& start_a, const float& iter);
+    void degRAPX(const Vertex &center, float angle);
+    void degRAPY(const Vertex &center, float angle);
+    void degRAPZ(const Vertex &center, float angle);
+
+
+    [[maybe_unused]] void rotX(float angle);
+    [[maybe_unused]] void rotY(float angle);
+    [[maybe_unused]] void rotZ(float angle);
+    void funRAPX(const Vertex &center, float currentAngle, const std::function<float(float, float, float)> &function,
+                 const float &start_a, const float &iter);
+    void funRAPY(const Vertex &center, float currentAngle, const std::function<float(float, float, float)> &function,
+                 const float &start_a, const float &iter);
+    void funRAPZ(const Vertex &center, float currentAngle, const std::function<float(float, float, float)> &function,
+                 const float &start_a, const float &iter);
 
     void destroy();
-    void reset(Model&part, std::vector<Bone>&bone);
-    void setModelIDs(const std::vector<std::string>&modelIDs);
-    void setModelPart(Model&part);
-    std::vector<BoneData> getData();
+    void reset();
 };
 
 

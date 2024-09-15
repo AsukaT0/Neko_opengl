@@ -13,6 +13,7 @@ void HumaModel::processing() {
             eyeIndex.push_back(i);
         }
     }
+
 }
 
 
@@ -53,7 +54,7 @@ void HumaModel::lookAt(const Vertex& pos) {
 
 void HumaModel::render(PerspectiveCamera camera) {
     Model::render(camera);
-    skel.render(camera, *this);
+    skel.render(camera);
 }
 
 void HumaModel::destroy() {
@@ -65,6 +66,6 @@ void HumaModel::loadSkeleton(const std::string& path) {
     std::thread([this, path]{
         skel = Skeleton();
         skel.loadSkelFile(path);
-        skel.initSkeleton(*this);
+        skel.initSkeleton(this);
     }).join();
 }

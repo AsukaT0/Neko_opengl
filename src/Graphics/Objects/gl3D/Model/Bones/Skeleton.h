@@ -14,26 +14,23 @@
 
 class Skeleton {
 private:
-    void resubInit(Model &model);
+    void resubInit();
+    Model *localModel = nullptr;
 
     Bone mainBone{};
-//    std::vector<vertarr > rawArray;
     std::vector<Bone> bonesArray;
     std::vector<std::vector<Bone>> subBonesArray;
     std::vector<std::vector<std::string>> modelsIndexes;
     AnimationController animController;
 
-    //    void initSkeleton(Model &model);
-    void saveSkeleton();
     void initAnimations();
 public:
     Skeleton() = default;
     void render(PerspectiveCamera camera);
-    void render(PerspectiveCamera camera, Model &model);
     void destroy();
 
     void loadSkelFile(std::string path);
-    void initSkeleton(Model &model);
+    void initSkeleton(Model *model);
 
 };
 
